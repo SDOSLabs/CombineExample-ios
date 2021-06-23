@@ -1,7 +1,11 @@
 # CombineExample
 Ejemplo de app para buscar películas utilizando Combine y la arquitectura MVVM.
 
-![screenshot1](screenshots/1.png) ![screenshot2](screenshots/2.png)
+<center>
+	<img src="screenshots/1.png" width="40%">
+	<img src="screenshots/2.png" width="40%">
+</center>
+
 
 # Versión Xcode
 Se ha compilado con la versión 12.5.
