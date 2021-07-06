@@ -76,15 +76,16 @@ extension MovieListViewModel {
             .map { _ in .initial }
             .eraseToAnyPublisher()
         
-        return Publishers.MergeMany(initial, emptySearch, cancelSearch)
-            .compactMap { [weak self] state in
-                guard let self = self else { return nil }
-                self.movies = []
-                self.searchSubscription?.cancel()
-                self.searchSubscription = nil
-                return state
-            }
+        let state = Publishers.MergeMany(initial, emptySearch, cancelSearch)
             .eraseToAnyPublisher()
+        
+        state.sink { [weak self] _ in
+            self?.movies = []
+            self?.searchSubscription?.cancel()
+            self?.searchSubscription = nil
+        }.store(in: &subscriptions)
+        
+        return state
     }
     
     private func loadingStateFor(validSearchInput: AnyPublisher<String, Never>) -> AnyPublisher<MovieListState, Never> {
