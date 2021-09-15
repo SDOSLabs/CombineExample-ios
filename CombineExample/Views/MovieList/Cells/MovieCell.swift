@@ -43,9 +43,9 @@ class MovieCell: UITableViewCell {
             .assign(to: \.text, on: overviewLabel)
             .store(in: &subscriptions)
         
-        output.movie.flatMap { $0.image }
-            .assign(to: \.image, on: posterImageView)
-            .store(in: &subscriptions)
+//        output.movie.flatMap { $0.image }
+//            .assign(to: \.image, on: posterImageView)
+//            .store(in: &subscriptions)
     }
     
     private func clean() {

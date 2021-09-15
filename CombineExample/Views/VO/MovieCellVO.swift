@@ -9,18 +9,24 @@ import Foundation
 import UIKit
 import Combine
 
-struct MovieCellVO: VO {
+final class MovieCellVO: VO, Identifiable, ObservableObject {
+    private let domain: Movie
+    
+    let id = UUID()
     let title: String
     let releaseYear: String?
     let overview: String?
-    let image: AnyPublisher<UIImage?, Never>
+    @Published var image: UIImage?
     
-    init(from domain: Movie) {
+    required init(from domain: Movie) {
+        self.domain = domain
         title = domain.title
         releaseYear = domain.releaseDate.flatMap(Self.releaseDateFormatter.string)
         overview = domain.overview
-        
-        image = domain.downloadPoster(size: .small)
+    }
+    
+    func downloadImage() {
+        domain.downloadPoster(size: .small)
             .compactMap { data -> UIImage? in
                 guard let data = data else { return nil }
                 return UIImage(data: data)
@@ -28,6 +34,6 @@ struct MovieCellVO: VO {
             .replaceError(with: nil)
             .subscribe(on: DispatchQueue.global(qos: .userInitiated))
             .receive(on: DispatchQueue.main)
-            .eraseToAnyPublisher()
+            .assign(to: &$image)
     }
 }
